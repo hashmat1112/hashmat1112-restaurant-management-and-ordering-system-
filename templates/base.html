@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FoodRush{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="{{ url_for('index') }}" class="nav-brand">🍽️ FoodRush</a>
+  <div class="nav-links">
+    <a href="{{ url_for('index') }}" class="{% if request.endpoint == 'index' %}active{% endif %}">Home</a>
+    <a href="{{ url_for('menu') }}" class="{% if request.endpoint == 'menu' %}active{% endif %}">Menu</a>
+    {% if session.get('customer_id') %}
+      <a href="{{ url_for('my_orders') }}" class="{% if request.endpoint == 'my_orders' %}active{% endif %}">My Orders</a>
+      <a href="{{ url_for('logout') }}">Logout ({{ session.customer_name }})</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+      <a href="{{ url_for('register') }}">Register</a>
+    {% endif %}
+    <a href="{{ url_for('cart') }}" class="cart-btn">
+      🛒 Cart <span class="cart-count" id="cart-count">0</span>
+    </a>
+  </div>
+</nav>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div style="max-width:900px;margin:1rem auto;padding:0 2rem;">
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+{% block content %}{% endblock %}
+
+<footer class="footer">
+  <p>© 2024 FoodRush — Made with ❤️ for food lovers</p>
+</footer>
+
+<style>
+@keyframes slideUp { from { transform: translateY(20px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+</style>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+
+{% block scripts %}{% endblock %}
+</body>
+</html>

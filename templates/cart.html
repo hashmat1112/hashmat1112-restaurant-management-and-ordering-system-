@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block title %}Cart — FoodRush{% endblock %}
+
+{% block content %}
+<div class="cart-page">
+  <h2 style="margin-bottom:2rem;">🛒 Your Cart</h2>
+
+  <div id="cart-empty" class="cart-empty" style="display:none;">
+    <div class="empty-icon">🛒</div>
+    <h3>Your cart is empty</h3>
+    <p class="text-muted mt-1">Add some delicious items from the menu!</p>
+    <a href="{{ url_for('menu') }}" class="btn btn-primary mt-3">Browse Menu</a>
+  </div>
+
+  <div id="cart-content">
+    <table class="cart-table" id="cart-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Price</th>
+          <th>Quantity</th>
+          <th>Subtotal</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="cart-body"></tbody>
+    </table>
+
+    <div class="cart-summary">
+      <div class="summary-row"><span>Subtotal</span><span id="s-subtotal">Rs 0</span></div>
+      <div class="summary-row"><span>Delivery Fee</span><span>Rs 50</span></div>
+      <div class="summary-row total"><span>Total</span><span id="s-total">Rs 0</span></div>
+      <a href="{{ url_for('checkout') }}" class="btn btn-primary w-full mt-3" id="checkout-btn">
+        Proceed to Checkout →
+      </a>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% endblock %}

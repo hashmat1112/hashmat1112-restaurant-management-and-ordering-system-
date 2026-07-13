@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}My Orders — FoodRush{% endblock %}
+
+{% block content %}
+<div class="section" style="max-width:900px;">
+  <h2 style="margin-bottom:2rem;">📦 My Orders</h2>
+
+  {% if orders %}
+  <div class="orders-list">
+    {% for order in orders %}
+    <div class="order-card">
+      <div class="order-card-left">
+        <h3>Order #{{ order.id }}</h3>
+        <p>{{ order.items_summary }}</p>
+        <p class="mt-1" style="font-size:0.8rem;color:var(--text-dim);">
+          {{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else '' }}
+        </p>
+      </div>
+      <div class="order-card-right">
+        <span class="status-badge status-{{ order.status }}">
+          {% if order.status == 'pending' %}⏳
+          {% elif order.status == 'confirmed' %}✅
+          {% elif order.status == 'preparing' %}👨‍🍳
+          {% elif order.status == 'out_for_delivery' %}🛵
+          {% elif order.status == 'delivered' %}✅
+          {% else %}❌{% endif %}
+          {{ order.status | replace('_', ' ') | title }}
+        </span>
+        <p class="mt-1" style="font-weight:700;color:var(--accent);">Rs {{ order.total_amount | int }}</p>
+        <a href="{{ url_for('track_order', order_id=order.id) }}" class="btn btn-outline btn-sm mt-1">
+          Track →
+        </a>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% else %}
+  <div class="cart-empty">
+    <div class="empty-icon">📦</div>
+    <h3>No orders yet</h3>
+    <p class="text-muted mt-1">Your order history will appear here</p>
+    <a href="{{ url_for('menu') }}" class="btn btn-primary mt-3">Start Ordering</a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

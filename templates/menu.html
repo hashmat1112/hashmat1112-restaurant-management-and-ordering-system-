@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Menu — FoodRush{% endblock %}
+
+{% block content %}
+<div class="section">
+  <div class="section-header">
+    <h2>Our Menu</h2>
+    <p>Fresh ingredients, authentic recipes</p>
+  </div>
+
+  <!-- Category Pills -->
+  <div class="cat-pills">
+    <a href="{{ url_for('menu') }}" class="cat-pill {% if not selected_cat %}active{% endif %}">All Items</a>
+    {% for cat in categories %}
+    <a href="{{ url_for('menu', category=cat.id) }}"
+       class="cat-pill {% if selected_cat == cat.id|string %}active{% endif %}">
+      {{ cat.icon }} {{ cat.name }}
+    </a>
+    {% endfor %}
+  </div>
+
+  <!-- Menu Grid -->
+  <div class="menu-grid">
+    {% for item in items %}
+    <div class="card menu-card">
+      <div class="menu-card-img">
+        {% if item.image_url %}
+          <img src="{{ item.image_url }}" alt="{{ item.name }}" style="width:100%;height:100%;object-fit:cover;">
+        {% else %}
+          <span style="font-size:4rem;">🍽️</span>
+        {% endif %}
+      </div>
+      <span class="badge-cat">{{ item.cat_name }}</span>
+      <div class="menu-card-body">
+        <h3>{{ item.name }}</h3>
+        <p>{{ item.description }}</p>
+        <div class="menu-card-footer">
+          <span class="price">{{ item.price | int }}</span>
+          <button class="btn btn-primary btn-sm" onclick="addToCart({{ item.id }}, '{{ item.name }}', {{ item.price }})">
+            + Add to Cart
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% if not items %}
+    <p class="text-muted" style="padding:2rem 0;">No items found in this category.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

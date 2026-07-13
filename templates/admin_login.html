@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — FoodRush</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-box">
+    <h2>⚙️ Admin Panel</h2>
+    <p class="subtitle">Sign in to manage FoodRush</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" name="username" class="form-control" placeholder="admin" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="••••••••" required>
+      </div>
+      <button type="submit" class="btn btn-primary w-full mt-2">Login →</button>
+    </form>
+
+    <div class="auth-footer">
+      <a href="{{ url_for('index') }}">← Back to site</a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

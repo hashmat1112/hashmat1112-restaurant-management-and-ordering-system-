@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}Order Placed! — FoodRush{% endblock %}
+
+{% block content %}
+<div class="success-page">
+  <div class="success-icon">🎉</div>
+  <h1>Order Placed!</h1>
+  <p class="text-muted">Thank you! Your food is being prepared. Sit back and relax 😊</p>
+
+  <div class="order-info-grid">
+    <div class="order-info-item">
+      <div class="label">Order ID</div>
+      <div class="val">#{{ order.id }}</div>
+    </div>
+    <div class="order-info-item">
+      <div class="label">Status</div>
+      <div class="val">⏳ Pending</div>
+    </div>
+    <div class="order-info-item">
+      <div class="label">Amount</div>
+      <div class="val">Rs {{ order.total_amount | int }}</div>
+    </div>
+    <div class="order-info-item">
+      <div class="label">Payment</div>
+      <div class="val">{{ order.payment_method | title }}</div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+    <a href="{{ url_for('track_order', order_id=order.id) }}" class="btn btn-primary">📍 Track Order</a>
+    <a href="{{ url_for('my_orders') }}" class="btn btn-outline">My Orders</a>
+    <a href="{{ url_for('menu') }}" class="btn btn-outline">Order More</a>
+  </div>
+</div>
+{% endblock %}

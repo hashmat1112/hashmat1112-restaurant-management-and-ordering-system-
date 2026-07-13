@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Admin — FoodRush{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-brand">
+      🍽️ FoodRush
+      <span>Admin Panel</span>
+    </div>
+    <nav class="sidebar-nav">
+      <a href="{{ url_for('admin_dashboard') }}" class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+        📊 Dashboard
+      </a>
+      <a href="{{ url_for('admin_orders') }}" class="{% if request.endpoint in ['admin_orders','admin_order_detail'] %}active{% endif %}">
+        📦 Orders
+      </a>
+      <a href="{{ url_for('admin_menu') }}" class="{% if request.endpoint == 'admin_menu' %}active{% endif %}">
+        🍽️ Menu
+      </a>
+      <a href="{{ url_for('admin_customers') }}" class="{% if request.endpoint == 'admin_customers' %}active{% endif %}">
+        👥 Customers
+      </a>
+    </nav>
+    <div class="sidebar-footer">
+      <p class="text-muted text-sm">{{ session.admin_name }}</p>
+      <a href="{{ url_for('admin_logout') }}" class="btn btn-outline btn-sm mt-1">Logout</a>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="flash flash-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+</div>
+
+</body>
+</html>

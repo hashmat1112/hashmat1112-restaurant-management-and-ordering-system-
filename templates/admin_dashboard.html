@@ -1,0 +1,60 @@
+{% extends "admin_base.html" %}
+{% block title %}Dashboard — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-topbar">
+  <h1>Dashboard</h1>
+  <span class="text-muted text-sm">Welcome back, {{ session.admin_name }}</span>
+</div>
+
+<!-- Stat Cards -->
+<div class="stats-grid">
+  <div class="stat-card accent">
+    <div class="stat-icon">📦</div>
+    <div class="stat-label">Total Orders</div>
+    <div class="stat-value">{{ total_orders }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">⏳</div>
+    <div class="stat-label">Pending Orders</div>
+    <div class="stat-value">{{ pending_orders }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">💰</div>
+    <div class="stat-label">Total Revenue</div>
+    <div class="stat-value" style="font-size:1.4rem;">Rs {{ revenue | int }}</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-icon">👥</div>
+    <div class="stat-label">Customers</div>
+    <div class="stat-value">{{ total_customers }}</div>
+  </div>
+</div>
+
+<!-- Recent Orders -->
+<h3 style="margin-bottom:1.2rem;">Recent Orders</h3>
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#ID</th>
+      <th>Customer</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in recent_orders %}
+    <tr>
+      <td>#{{ order.id }}</td>
+      <td>{{ order.customer_name }}</td>
+      <td>Rs {{ order.total_amount | int }}</td>
+      <td><span class="status-badge status-{{ order.status }}">{{ order.status | replace('_',' ') | title }}</span></td>
+      <td class="text-muted text-sm">{{ order.created_at.strftime('%d %b %Y') if order.created_at else '' }}</td>
+      <td><a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn btn-outline btn-sm">View</a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

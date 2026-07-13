@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Checkout — FoodRush{% endblock %}
+
+{% block content %}
+<div class="checkout-layout">
+
+  <!-- Left: Forms -->
+  <div>
+    <h2 style="margin-bottom:1.5rem;">Checkout</h2>
+
+    <!-- Delivery Details -->
+    <div class="form-section">
+      <h3>📍 Delivery Details</h3>
+      <form id="checkout-form" method="POST">
+        <input type="hidden" name="cart_data" id="cart-data-input">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name</label>
+            <input type="text" class="form-control" value="{{ customer.name }}" readonly>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="text" class="form-control" value="{{ customer.phone or '' }}" readonly>
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Delivery Address</label>
+          <textarea name="delivery_address" class="form-control" rows="2" required
+            placeholder="Full delivery address...">{{ customer.address or '' }}</textarea>
+        </div>
+
+        <!-- Payment -->
+        <div class="form-section" style="margin-top:1.5rem;padding:1.5rem;">
+          <h3>💳 Payment Method</h3>
+          <div class="payment-methods" id="payment-methods">
+            <label class="pay-option selected" onclick="selectPay(this,'card')">
+              <input type="radio" name="payment_method" value="card" checked>
+              <span class="pay-icon">💳</span>
+              <span class="pay-label">Card</span>
+            </label>
+            <label class="pay-option" onclick="selectPay(this,'cash')">
+              <input type="radio" name="payment_method" value="cash">
+              <span class="pay-icon">💵</span>
+              <span class="pay-label">Cash on Delivery</span>
+            </label>
+            <label class="pay-option" onclick="selectPay(this,'jazzcash')">
+              <input type="radio" name="payment_method" value="jazzcash">
+              <span class="pay-icon">📱</span>
+              <span class="pay-label">JazzCash</span>
+            </label>
+          </div>
+
+          <div class="card-fields" id="card-fields">
+            <div class="mock-badge">✓ Secure Demo Payment</div>
+            <div class="form-group">
+              <label>Card Number</label>
+              <input type="text" class="form-control" placeholder="4242 4242 4242 4242" maxlength="19">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Expiry</label>
+                <input type="text" class="form-control" placeholder="MM/YY">
+              </div>
+              <div class="form-group">
+                <label>CVV</label>
+                <input type="text" class="form-control" placeholder="123">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <button type="button" class="btn btn-primary w-full mt-3" onclick="placeOrder()">
+          Place Order 🎉
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Right: Order Summary -->
+  <div>
+    <div class="order-summary-box">
+      <h3>Order Summary</h3>
+      <div id="summary-lines"></div>
+      <div class="order-total">
+        <span>Total</span>
+        <span id="order-total">Rs 0</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Processing Modal -->
+<div class="modal-overlay" id="modal">
+  <div class="modal" style="text-align:center;">
+    <div style="font-size:3rem;margin-bottom:1rem;">⚙️</div>
+    <h3>Processing Payment...</h3>
+    <div class="processing-bar">
+      <div class="processing-fill" id="proc-fill"></div>
+    </div>
+    <p class="text-muted text-sm">Please wait while we confirm your order</p>
+  </div>
+</div>
+{% endblock %}
+
+{% endblock %}

@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}Register — FoodRush{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-box">
+    <h2>Create Account 🍔</h2>
+    <p class="subtitle">Join FoodRush and start ordering</p>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+        <div class="flash flash-{{ category }}">{{ message }}</div>
+      {% endfor %}
+    {% endwith %}
+
+    <form method="POST">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" name="name" class="form-control" placeholder="Ahmed Khan" required>
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input type="email" name="email" class="form-control" placeholder="you@example.com" required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" name="password" class="form-control" placeholder="Min 6 characters" required>
+      </div>
+      <div class="form-group">
+        <label>Phone Number</label>
+        <input type="text" name="phone" class="form-control" placeholder="03XX-XXXXXXX">
+      </div>
+      <div class="form-group">
+        <label>Delivery Address</label>
+        <textarea name="address" class="form-control" rows="2" placeholder="Street, Area, City"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary w-full mt-2">Create Account →</button>
+    </form>
+
+    <div class="auth-footer">
+      Already have an account? <a href="{{ url_for('login') }}">Sign in</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

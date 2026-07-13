@@ -1,0 +1,50 @@
+{% extends "admin_base.html" %}
+{% block title %}Orders — Admin{% endblock %}
+
+{% block content %}
+<div class="admin-topbar">
+  <h1>All Orders</h1>
+</div>
+
+<!-- Filter Pills -->
+<div class="cat-pills" style="margin-bottom:1.5rem;">
+  {% for s in ['', 'pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered', 'cancelled'] %}
+  <a href="{{ url_for('admin_orders', status=s) }}"
+     class="cat-pill {% if status_filter == s %}active{% endif %}">
+    {% if s == '' %}All
+    {% else %}{{ s | replace('_',' ') | title }}{% endif %}
+  </a>
+  {% endfor %}
+</div>
+
+<table class="data-table">
+  <thead>
+    <tr>
+      <th>#ID</th>
+      <th>Customer</th>
+      <th>Phone</th>
+      <th>Amount</th>
+      <th>Status</th>
+      <th>Payment</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for order in orders %}
+    <tr>
+      <td>#{{ order.id }}</td>
+      <td>{{ order.customer_name }}</td>
+      <td class="text-muted">{{ order.phone or '—' }}</td>
+      <td>Rs {{ order.total_amount | int }}</td>
+      <td><span class="status-badge status-{{ order.status }}">{{ order.status | replace('_',' ') | title }}</span></td>
+      <td class="text-muted text-sm">{{ order.payment_method }}</td>
+      <td class="text-muted text-sm">{{ order.created_at.strftime('%d %b %Y') if order.created_at else '' }}</td>
+      <td><a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn btn-outline btn-sm">View</a></td>
+    </tr>
+    {% else %}
+    <tr><td colspan="8" style="text-align:center;padding:2rem;color:var(--text-muted);">No orders found</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

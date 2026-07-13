@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Track Order #{{ order.id }} — FoodRush{% endblock %}
+
+{% block content %}
+<div class="track-page">
+  <a href="{{ url_for('my_orders') }}" class="text-muted text-sm">← Back to My Orders</a>
+  <h2 style="margin:1rem 0 0.3rem;">Track Order <span class="text-accent">#{{ order.id }}</span></h2>
+  <p class="text-muted">Placed on {{ order.created_at.strftime('%d %b %Y, %I:%M %p') if order.created_at else '' }}</p>
+
+  {% set statuses = ['pending', 'confirmed', 'preparing', 'out_for_delivery', 'delivered'] %}
+  {% set current_idx = statuses.index(order.status) if order.status in statuses else 0 %}
+
+  <!-- Status Steps -->
+  <div class="status-steps">
+    {% set steps = [('⏳','Pending'),('✅','Confirmed'),('👨‍🍳','Preparing'),('🛵','On the Way'),('🎉','Delivered')] %}
+    {% for icon, label in steps %}
+    {% set idx = loop.index0 %}
+    <div class="status-step">
+      <div class="step-dot {% if idx < current_idx %}done{% elif idx == current_idx %}active{% endif %}">
+        {{ icon }}
+      </div>
+      <div class="step-label {% if idx == current_idx %}active{% endif %}">{{ label }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if order.status == 'cancelled' %}
+  <div class="flash flash-error" style="text-align:center;">This order was cancelled.</div>
+  {% endif %}
+
+  <!-- Order Items -->
+  <div class="form-section" style="margin-top:2rem;">
+    <h3 style="margin-bottom:1.2rem;">Items Ordered</h3>
+    <table class="cart-table">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Qty</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}
+        <tr>
+          <td>{{ item.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>Rs {{ item.unit_price | int }}</td>
+          <td>Rs {{ (item.unit_price * item.quantity) | int }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="cart-summary" style="margin-top:1.5rem;">
+      <div class="summary-row"><span>Subtotal</span><span>Rs {{ (order.total_amount - 50) | int }}</span></div>
+      <div class="summary-row"><span>Delivery</span><span>Rs 50</span></div>
+      <div class="summary-row total"><span>Total</span><span>Rs {{ order.total_amount | int }}</span></div>
+    </div>
+  </div>
+
+  <!-- Delivery Info -->
+  <div class="form-section" style="margin-top:1.5rem;">
+    <h3 style="margin-bottom:1rem;">Delivery Info</h3>
+    <p><span class="text-muted">Address:</span> {{ order.delivery_address }}</p>
+    <p class="mt-1"><span class="text-muted">Payment:</span> {{ order.payment_method | title }}</p>
+  </div>
+</div>
+{% endblock %}
